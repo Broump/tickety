@@ -4,7 +4,7 @@ const Ticket = new mongoose.Schema({
 	ticket_name: {
 		type: String,
 	},
-	ticket_created_date: {
+	ticket_due_date: {
 		type: Date,
 	},
 	ticket_status: {
@@ -14,6 +14,9 @@ const Ticket = new mongoose.Schema({
 		type: String,
 	},
 	ticket_forWho: {
+		type: String,
+	},
+	ticket_description: {
 		type: String,
 	},
 });

@@ -1,5 +1,4 @@
 const User = require("../model/user");
-const { decrypt } = require("../helper/crypto.js");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 mongoose.connect(process.env.CONNECTION);
@@ -21,6 +20,7 @@ async function GetTickets(token) {
 								ticket_status: user.tickets[index].ticket_status,
 								ticket_categorie: user.tickets[index].ticket_categorie,
 								ticket_forWho: user.tickets[index].ticket_forWho,
+								ticket_description: user.tickets[index].ticket_description,
 								ticket_id: user.tickets[index]._id,
 							});
 						}
@@ -30,7 +30,7 @@ async function GetTickets(token) {
 			}
 		}).clone();
 
-		return { status: "ok", data: list_of_process };
+		return { status: "ok", data: list_of_tickets };
 	} catch (err) {
 		return { status: "error" };
 	}

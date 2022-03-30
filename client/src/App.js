@@ -5,7 +5,8 @@ import ProtectedRoute from "./components/protectedRoute";
 import Register from "./components/register";
 import Login from "./components/login";
 import Home from "./components/home";
-import Navigaton from "./components/navigaton";
+import Navigaton from "./components/navigation";
+import Tickets from "./components/tickets";
 
 function App() {
 	const queryClient = new QueryClient();

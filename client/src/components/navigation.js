@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+
 import { useQuery } from "react-query";
 
 import {
@@ -33,6 +34,9 @@ import {
 
 function Navigaton() {
 	const [opened, setOpened] = useState(false);
+
+	const [submit, setSubmit] = useState(false);
+
 	const notifications = useNotifications();
 
 	const schema = z.object({
@@ -55,7 +59,7 @@ function Navigaton() {
 		return res.data;
 	}
 
-	const { data, status } = useQuery("userdata", getUserData);
+	const { data, status, refetch } = useQuery("userdata", getUserData);
 
 	const form = useForm({
 		schema: zodResolver(schema),
@@ -90,7 +94,7 @@ function Navigaton() {
 
 	async function UpdateUser() {
 		try {
-			const user = await axios.post("https://locahost:3001/api/update-user", {
+			const user = await axios.post("http://localhost:3001/api/update-user", {
 				accestoken: localStorage.getItem("token"),
 				username: form.values.username,
 				email: form.values.email,
@@ -107,6 +111,7 @@ function Navigaton() {
 						disallowClose: true,
 					});
 					form.reset();
+					refetch();
 					handleLogout();
 				} else {
 					notifications.showNotification({
@@ -138,8 +143,9 @@ function Navigaton() {
 					icon: <Check />,
 					disallowClose: true,
 				});
+				refetch();
 				handleLogout();
-				window.location.reload();
+				setSubmit(true);
 			} else {
 				notifications.showNotification({
 					title: "There was an error",
@@ -164,123 +170,136 @@ function Navigaton() {
 			icon: <Check />,
 			disallowClose: true,
 		});
-		window.location.reload();
+		refetch();
 	};
 
 	return (
-		<Header height={40}>
-			<Group position="apart" style={{ marginBottom: 5 }}>
-				<Link as={Link} to="/" style={{ textDecoration: "none" }}>
-					<Text
-						weight={700}
-						size="xl"
-						variant="gradient"
-						gradient={{ from: "lime", to: "inidgo", deg: 180 }}
-					>
-						Tickety
-					</Text>
-				</Link>
+		<div>
+			{submit ? (
+				<Navigate to="/login" replace={true} />
+			) : (
+				<Header height={40}>
+					<Group position="apart" style={{ marginBottom: 5 }}>
+						<Link as={Link} to="/" style={{ textDecoration: "none" }}>
+							<Text
+								weight={700}
+								size="xl"
+								ml="sm"
+								variant="gradient"
+								gradient={{ from: "blue", to: "inidgo", deg: 180 }}
+							>
+								Tickety
+							</Text>
+						</Link>
 
-				<Group>
-					<Box>
-						{data.username ? (
-							<Group position="apart">
-								<Text size="xl">{data.username}</Text>
-								<Menu trigger="hover" delay={500}>
-									<Menu.Item
-										icon={<Settings size={14} />}
-										onClick={() => SetForm()}
-									>
-										Settings
-									</Menu.Item>
-									<Divider />
-									<Menu.Item
-										color="red"
-										icon={<Logout size={14} />}
-										onClick={() => handleLogout()}
-									>
-										Log Out
-									</Menu.Item>
-								</Menu>
-							</Group>
-						) : (
+						<Group>
 							<Box>
-								<Text size="md">
-									<Link
-										to="/login"
-										style={{
-											textDecoration: "none",
-											margin: "10px",
-											color: "white",
-										}}
-									>
-										Login
-									</Link>
-									/
-									<Link
-										to="/register"
-										style={{
-											textDecoration: "none",
-											margin: "10px",
-											color: "white",
-										}}
-									>
-										Register
-									</Link>
-								</Text>
+								{data.username ? (
+									<Group position="apart">
+										<Text size="xl">{data.username}</Text>
+										<Menu trigger="hover" delay={500}>
+											<Menu.Item
+												icon={<Settings size={14} />}
+												onClick={() => SetForm()}
+											>
+												Settings
+											</Menu.Item>
+											<Divider />
+											<Menu.Item
+												color="red"
+												icon={<Logout size={14} />}
+												onClick={() => handleLogout()}
+											>
+												Log Out
+											</Menu.Item>
+										</Menu>
+									</Group>
+								) : (
+									<Box>
+										<Text size="md">
+											<Link
+												to="/login"
+												style={{
+													textDecoration: "none",
+													margin: "10px",
+													color: "white",
+												}}
+											>
+												Login
+											</Link>
+											/
+											<Link
+												to="/register"
+												style={{
+													textDecoration: "none",
+													margin: "10px",
+													color: "white",
+												}}
+											>
+												Register
+											</Link>
+										</Text>
+									</Box>
+								)}
 							</Box>
-						)}
-					</Box>
-				</Group>
-			</Group>
+						</Group>
+					</Group>
 
-			<Modal
-				opened={opened}
-				onClose={() => setOpened(false)}
-				title="Update user settings"
-			>
-				<form onSubmit={form.onSubmit(UpdateUser)}>
-					<TextInput
-						placeholder="Your username"
-						label="New username"
-						size="md"
-						{...form.getInputProps("username")}
-						mt="sm"
-					/>
-					<TextInput
-						placeholder="example@mail.com"
-						label="New email"
-						size="md"
-						{...form.getInputProps("email")}
-						mt="sm"
-					/>
-					<PasswordInput
-						placeholder="New password"
-						icon={<Lock />}
-						label="new password"
-						size="md"
-						visibilityToggleIcon={({ reveal, size }) =>
-							reveal ? <EyeOff size={size} /> : <EyeCheck size={size} />
-						}
-						{...form.getInputProps("password")}
-						mt="sm"
-					/>
-					<Button variant="outline" color="lime" type="submit" mx="20" mt="sm">
-						Update user
-					</Button>
-				</form>
-				<Button
-					variant="outline"
-					color="red"
-					type="submit"
-					mx="20"
-					mt="sm"
-					onClick={() => deleteUser()}
-				>
-					Delete user
-				</Button>
-			</Modal>
-		</Header>
+					<Modal
+						opened={opened}
+						onClose={() => setOpened(false)}
+						title="Update user settings"
+					>
+						<form onSubmit={form.onSubmit(UpdateUser)}>
+							<TextInput
+								placeholder="Your username"
+								label="New username"
+								size="md"
+								{...form.getInputProps("username")}
+								mt="sm"
+							/>
+							<TextInput
+								placeholder="example@mail.com"
+								label="New email"
+								size="md"
+								{...form.getInputProps("email")}
+								mt="sm"
+							/>
+							<PasswordInput
+								placeholder="New password"
+								icon={<Lock />}
+								label="new password"
+								size="md"
+								visibilityToggleIcon={({ reveal, size }) =>
+									reveal ? <EyeOff size={size} /> : <EyeCheck size={size} />
+								}
+								{...form.getInputProps("password")}
+								mt="sm"
+							/>
+							<Button
+								variant="outline"
+								color="lime"
+								type="submit"
+								mx="20"
+								mt="sm"
+							>
+								Update user
+							</Button>
+							<Button
+								variant="outline"
+								color="red"
+								mx="20"
+								mt="sm"
+								ml="md"
+								onClick={() => deleteUser()}
+							>
+								Delete user
+							</Button>
+						</form>
+					</Modal>
+				</Header>
+			)}
+		</div>
 	);
 }
 

@@ -17,7 +17,7 @@ function Register() {
 
 	async function RegisterUser() {
 		try {
-			const user = await axios.post("https://localhost:3001/api/register", {
+			const user = await axios.post("http://localhost:3001/api/register", {
 				username: form.values.username,
 				email: form.values.email,
 				password: form.values.password,
@@ -108,7 +108,7 @@ function Register() {
 						}
 						{...form.getInputProps("password")}
 					/>
-					<Button variant="outline" color="lime" type="submit" mx="20" mt="sm">
+					<Button variant="outline" color="blue" type="submit" mx="20" mt="sm">
 						register
 					</Button>
 				</form>

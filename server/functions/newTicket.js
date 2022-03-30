@@ -1,5 +1,4 @@
 const User = require("../model/user");
-const { encrypt } = require("../helper/crypto.js");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 mongoose.connect(process.env.CONNECTION);
@@ -7,9 +6,10 @@ mongoose.connect(process.env.CONNECTION);
 async function NewTicket(
 	token,
 	ticket_name,
-	ticket_created_date,
-	ticket_status,
 	ticket_categorie,
+	ticket_description,
+	ticket_due_date,
+	ticket_status,
 	ticket_forWho
 ) {
 	try {
@@ -22,16 +22,18 @@ async function NewTicket(
 				$push: {
 					tickets: {
 						ticket_name: ticket_name,
-						ticket_created_date: ticket_created_date,
+						ticket_created_date: ticket_due_date,
 						ticket_status: ticket_status,
 						ticket_categorie: ticket_categorie,
 						ticket_forWho: ticket_forWho,
+						ticket_description: ticket_description,
 					},
 				},
 			}
 		);
 		return { status: "ok" };
 	} catch (err) {
+		console.log(err);
 		return { status: "error" };
 	}
 }

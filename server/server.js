@@ -70,23 +70,21 @@ app.post("/api/delete-user", async (req, res) => {
 //endpoint to create a new ticket -> status "ok" or "error"
 app.post("/api/new-ticket", async (req, res) => {
 	token = req.body.accestoken;
-	processname = req.body.processname;
-	komootemail = req.body.komootemail;
-	komootid = req.body.komootid;
-	komootpassword = req.body.komootpassword;
-	notion_database_id = req.body.notion_database_id;
-	notion_api_token = req.body.notion_api_token;
-	process_status = "stopped";
+	ticket_name = req.body.ticket_name;
+	ticket_categorie = req.body.ticket_categorie;
+	ticket_description = req.body.ticket_description;
+	ticket_due_date = req.body.ticket_due_date;
+	ticket_status = req.body.ticket_status;
+	ticket_forWho = req.body.ticket_forWho;
 
 	const resNewTicket = newTicket.NewTicket(
 		token,
-		processname,
-		komootemail,
-		komootid,
-		komootpassword,
-		notion_database_id,
-		notion_api_token,
-		process_status
+		ticket_name,
+		ticket_categorie,
+		ticket_description,
+		ticket_due_date,
+		ticket_status,
+		ticket_forWho
 	);
 
 	res.json(await resNewTicket);
@@ -96,7 +94,7 @@ app.post("/api/new-ticket", async (req, res) => {
 app.get("/api/get-tickets", async (req, res) => {
 	token = req.headers["accesstoken"];
 
-	const resGetTicket = getTickets.GetProcess(token);
+	const resGetTicket = getTickets.GetTickets(token);
 
 	res.json((await resGetTicket).data);
 });
@@ -104,14 +102,14 @@ app.get("/api/get-tickets", async (req, res) => {
 //endpoint to delete a given ticket -> status "ok" or "error"
 app.post("/api/delete-ticket", async (req, res) => {
 	token = req.body.accestoken;
-	processid = req.body.processid;
+	ticket_id = req.body.ticket_id;
 
-	const resDeleteTicket = deleteTicket.DeleteTicket(token, processid);
+	const resDeleteTicket = deleteTicket.DeleteTicket(token, ticket_id);
 
 	res.json(await resDeleteTicket);
 });
 
 //starting the server, process.env.PORT == Heroku Port
-app.listen(process.env.PORT || 3001, () => {
-	console.log("Server is running on PORT 3001 or Heroku");
+app.listen(3001, () => {
+	console.log("Server is running on PORT 3001");
 });
