@@ -75,15 +75,18 @@ function Tickets() {
 
 	async function CreateTicket() {
 		try {
-			const ticket = await axios.post("http://localhost:3001/api/new-ticket", {
-				accestoken: localStorage.getItem("token"),
-				ticket_name: form.values.ticket_name,
-				ticket_status: form.values.ticket_status,
-				ticket_categorie: form.values.ticket_categorie,
-				ticket_forWho: form.values.ticket_forWho,
-				ticket_created_date: form.values.ticket_due_date,
-				ticket_description: form.values.ticket_description,
-			});
+			const ticket = await axios.post(
+				"https://tickety-tickets.herokuapp.com/api/new-ticket",
+				{
+					accestoken: localStorage.getItem("token"),
+					ticket_name: form.values.ticket_name,
+					ticket_status: form.values.ticket_status,
+					ticket_categorie: form.values.ticket_categorie,
+					ticket_forWho: form.values.ticket_forWho,
+					ticket_created_date: form.values.ticket_due_date,
+					ticket_description: form.values.ticket_description,
+				}
+			);
 			if (ticket) {
 				if (ticket.data.status === "ok") {
 					refetch();
@@ -113,18 +116,21 @@ function Tickets() {
 	}
 
 	async function getTickets() {
-		const res = await axios.get("http://localhost:3001/api/get-tickets", {
-			headers: {
-				accesstoken: localStorage.getItem("token"),
-			},
-		});
+		const res = await axios.get(
+			"https://tickety-tickets.herokuapp.com/api/get-tickets",
+			{
+				headers: {
+					accesstoken: localStorage.getItem("token"),
+				},
+			}
+		);
 		return res.data;
 	}
 
 	async function deleteTicket(ticket_id) {
 		try {
 			const ticket = await axios.post(
-				"http://localhost:3001/api/delete-ticket",
+				"https://tickety-tickets.herokuapp.com/api/delete-ticket",
 				{
 					accestoken: localStorage.getItem("token"),
 					ticket_id: ticket_id,

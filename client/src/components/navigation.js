@@ -51,11 +51,14 @@ function Navigaton() {
 	});
 
 	async function getUserData() {
-		const res = await axios.get("http://localhost:3001/api/get-user-data", {
-			headers: {
-				accesstoken: localStorage.getItem("token"),
-			},
-		});
+		const res = await axios.get(
+			"https://tickety-tickets.herokuapp.com/api/get-user-data",
+			{
+				headers: {
+					accesstoken: localStorage.getItem("token"),
+				},
+			}
+		);
 		return res.data;
 	}
 
@@ -94,12 +97,15 @@ function Navigaton() {
 
 	async function UpdateUser() {
 		try {
-			const user = await axios.post("http://localhost:3001/api/update-user", {
-				accestoken: localStorage.getItem("token"),
-				username: form.values.username,
-				email: form.values.email,
-				password: form.values.password,
-			});
+			const user = await axios.post(
+				"https://tickety-tickets.herokuapp.com/api/update-user",
+				{
+					accestoken: localStorage.getItem("token"),
+					username: form.values.username,
+					email: form.values.email,
+					password: form.values.password,
+				}
+			);
 			if (user) {
 				if (user.data.status === "ok") {
 					notifications.showNotification({
@@ -131,9 +137,12 @@ function Navigaton() {
 
 	async function deleteUser() {
 		try {
-			const user = await axios.post("http://localhost:3001/api/delete-user", {
-				accestoken: localStorage.getItem("token"),
-			});
+			const user = await axios.post(
+				"https://tickety-tickets.herokuapp.com/api/delete-user",
+				{
+					accestoken: localStorage.getItem("token"),
+				}
+			);
 
 			if (user.data.status === "ok") {
 				notifications.showNotification({
