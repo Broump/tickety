@@ -110,6 +110,6 @@ app.post("/api/delete-ticket", async (req, res) => {
 });
 
 //starting the server, process.env.PORT == Heroku Port
-app.listen(3001, () => {
+app.listen(process.env.PORT || 3001, () => {
 	console.log("Server is running on PORT 3001");
 });
