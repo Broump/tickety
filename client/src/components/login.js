@@ -84,7 +84,7 @@ function Login() {
 						/>
 						<Button
 							variant="outline"
-							color="lime"
+							color="blue"
 							type="submit"
 							mx="20"
 							mt="sm"
